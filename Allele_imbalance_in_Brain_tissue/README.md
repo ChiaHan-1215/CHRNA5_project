@@ -1,6 +1,7 @@
 ## Goal: For testing imbalance
 - File: GTEx brain RNA-seq BAM files
 - SNPs:
+- **Notes** for rs10637216, the location for detecting insertion is located in `78595865`, due to the short-read cDNA alignment diffcult to align same repeat sequence for this SNP 
 
 ```
 POS_hg38	rsID	REF, R	ALT, A
