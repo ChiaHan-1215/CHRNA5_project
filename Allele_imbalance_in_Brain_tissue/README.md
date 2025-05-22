@@ -31,8 +31,7 @@ will be in T-drive
 GTEX-13VXU
 GTEX-1B8L1
 GTEX-N7MS
-GTEX-R55E
-GTEX-WHSE??
+GTEX-WHSE
 
 selected tissue order:
 All the xxx_ganglia, Cerebellar_Hemixxx, Cerebellum
