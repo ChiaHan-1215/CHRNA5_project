@@ -21,3 +21,21 @@ script name `GTEx_3SNPs_GT.R`
 `~/Desktop/chr15_CHRNA5_bladder_project/GTEx_v8_Brain_selected_by_Oscar/Allelic_imbalance_analysis`
 will be in T-drive
 
+
+------------
+
+
+- GTEx sample select and tissue
+
+```
+GTEX-13VXU
+GTEX-1B8L1
+GTEX-N7MS
+GTEX-R55E
+GTEX-WHSE??
+
+selected tissue order:
+All the xxx_ganglia, Cerebellar_Hemixxx, Cerebellum
+
+No Hypothalamus
+```
