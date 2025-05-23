@@ -1,2 +1,12 @@
 # CHRNA5_project
-Downloading GTEx RNA_seq BAMs for detecting Allele imbalance in CHRNA5 project
+
+- Goal:
+Downloading GTEx RNA_seq BAMs (v8, hg38 alignment) for detecting rs578776 allele imbalance around CHRNA5/CHRNA3 gene.
+
+- Data:
+GTEx v8 brain RNA-seq BAM files, located in T-drive:
+/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/GTEx_v8_RNA_seq_BAM_hg38/Brain_BAM/
+
+- Code:
+`igvtool_count_for_SNPs_GT.R` : Counting BAM files reads in 3 target SNPs: rs578776, rs10637216, rs660652. the output will generate how many read count per each A,T,C,G,N,DEL,INS
+`GTEx_3SNPs_GT_plot_show_reads.R` : We focused on rs578776, Generating the data summary table of rs578776 read count and showed the result in barplot.
