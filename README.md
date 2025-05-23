@@ -12,4 +12,6 @@
   
   `igvtool_count_for_SNPs_GT.R` : Counting BAM files reads in 3 target SNPs: rs578776, rs10637216, rs660652. the output will generate how many read count per each A,T,C,G,N,DEL,INS
 
+  `run_igvtool.sh`: for running the `igvtool_count_for_SNPs_GT.R` rscript in Biowulf 
+
   `GTEx_3SNPs_GT_plot_show_reads.R` : We focused on rs578776, Generating the data summary table of rs578776 read count and showed the result in barplot.
