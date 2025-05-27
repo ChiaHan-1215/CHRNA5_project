@@ -17,7 +17,7 @@
   ```
 
 
-- File: GTEx brain RNA-seq BAM files mentioned at the main README
+- Data: GTEx brain RNA-seq BAM files mentioned at the main README
 
   - Selected sample ID and tissues
 
