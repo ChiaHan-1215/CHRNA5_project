@@ -34,7 +34,7 @@
 - Code:
 
   - `GTEx_3SNPs_GT_plot_show_reads.R` : We focused on rs578776, Generating the data summary table of rs578776 read count and showed the result in barplot.
-  - script name `GTEx_3SNPs_GT.R` also located in the T-drive `~/Desktop/chr15_CHRNA5_bladder_project/GTEx_v8_Brain_selected_by_Oscar/Allelic_imbalance_analysis`
+  - script also located in the T-drive `~/Desktop/chr15_CHRNA5_bladder_project/GTEx_v8_Brain_selected_by_Oscar/Allelic_imbalance_analysis`
 
 
 
