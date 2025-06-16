@@ -1,0 +1,10 @@
+# Using Featurecount
+
+
+`./featureCounts -a position.saf -F SAF -o output Input.bam --splitOnly -J`
+
+Where position.saf is tab-delimited file:
+GeneID	Chr	Start	End	Strand
+
+The saf file use for alayzing Atuahene long read: 
+`pET5p	pET01_CHRNA5_Exon5	1290	3593	+`
