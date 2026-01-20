@@ -4,7 +4,7 @@
 
 #### Data: Target dataset: GTEx CHRNA5 and PSMA4 whole gene/isoform TPM
 - Location:
-- The new files are in folder in T-drive `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/CHRNA5_project/updated_version_07232024`
+- The new files are in folder in T-drive `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/updated_version_07232024`
 - Target SNPs: 33 SNPs in the region
 
 ### code: 
