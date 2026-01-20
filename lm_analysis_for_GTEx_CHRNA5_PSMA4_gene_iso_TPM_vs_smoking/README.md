@@ -29,8 +29,10 @@ fmla_all.Cig <- as.formula(paste(j, "~", i, " + SEX + AGE + smoking_coded + ",i,
 fmla_inter.Cig <- as.formula(paste(j, "~", i, " * smoking_coded + SEX + AGE + Cig_day_coded"))
 
 fmla.Cig <- as.formula(paste(j, "~", i, " + SEX + AGE + Cig_day_coded"))
-              
 
 ```
+
+
+The R code `lm_analysis_for_C5_PSMA4_GT_vs_smoking.R` provide good example of how to generate summary table for lm analysis with detailed columns indicating key info.
 
 
