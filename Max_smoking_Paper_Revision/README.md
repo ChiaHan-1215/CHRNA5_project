@@ -9,6 +9,9 @@ https://www.proteinatlas.org/ENSG00000169684-CHRNA5/cell+line
 Also MAGE 1000GP project which has 700ish LCL expression
 https://github.com/mccoy-lab/MAGE
 
+DepMap CCLE CHRNA5 expression
+
+
 ------
 
 ### Project2: Additional CHRNA5 isoform junction count
