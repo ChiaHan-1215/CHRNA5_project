@@ -16,10 +16,10 @@ https://github.com/mccoy-lab/MAGE
 Relate to Table S4
 
 SHSY5Y 
-> The original files are in `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/CCLE_and_other_RNA-seq_Bam_files/cell_SH-SY5Y_short_read_RNA_seq_bams_hg38/Featurecount_CHRNA5_isoform`
-> SHSY5Y ratio summary: /Users/leec20/Desktop/chr15_CHRNA5_bladder_project/Max_and_Auth_C5_smoking_paper/SHSY5Y_c5_iso_raio_summary.csv
-> The code for processing is in [SHSY5Y Repo](https://github.com/ChiaHan-1215/SH-SY5Y_cell_line_RNA_seq_with_long_read/blob/main/SHSY5Y_featurecount_CHRNA5.R)
-> Note: We only use rep1 to rep3 for plotting and counting, need to adjust code accordingly.
+> - The original files are in `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/CCLE_and_other_RNA-seq_Bam_files/cell_SH-SY5Y_short_read_RNA_seq_bams_hg38/Featurecount_CHRNA5_isoform` 
+> - SHSY5Y ratio summary: /Users/leec20/Desktop/chr15_CHRNA5_bladder_project/Max_and_Auth_C5_smoking_paper/SHSY5Y_c5_iso_raio_summary.csv
+> - The code for processing is in [SHSY5Y Repo](https://github.com/ChiaHan-1215/SH-SY5Y_cell_line_RNA_seq_with_long_read/blob/main/SHSY5Y_featurecount_CHRNA5.R)
+> - Note: We only use rep1 to rep3 for plotting and counting, need to adjust code accordingly.
 
 
 
