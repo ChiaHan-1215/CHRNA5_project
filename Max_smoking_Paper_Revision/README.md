@@ -24,8 +24,8 @@ SHSY5Y
 
 
 A549 and UMUC3 RNA-seq Jc count
-> the whole files are in the `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/RNA-seq/RNAseq_Smoking_Brenen_2024-05-28/Bam_Files/project_CHRNA5`
-> In the `countsJunction_A549.UMUC3_DMSO.CSC_CHRNA5_analysis.xlsx` excel file contines all the orginal result in sheet1 and summary in sheet2.
-> Use the shhet `UMUC3 R1` or `A549 R1` to annotated new isoform
+> - the whole files are in the `/Volumes/ifs/DCEG/Branches/LTG/Prokunina/RNA-seq/RNAseq_Smoking_Brenen_2024-05-28/Bam_Files/project_CHRNA5`
+> - In the `countsJunction_A549.UMUC3_DMSO.CSC_CHRNA5_analysis.xlsx` excel file contines all the orginal result in sheet1 and summary in sheet2.
+> - Use the shhet `UMUC3 R1` or `A549 R1` to annotated new isoform
 
 
