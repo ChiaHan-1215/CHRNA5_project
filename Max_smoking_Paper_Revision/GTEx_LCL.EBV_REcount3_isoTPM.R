@@ -108,13 +108,18 @@ for (j in names(df)[7:12]){
 
 # load the SMOKE and GT and TPM 
 # also have EBV cell "Cells_EBV_transformedlymphocytes"
-isoTPM_GT <- read.delim('~/Desktop/chr15_CHRNA5_bladder_project/Finalized_GTEx_GT_CHRAN5_isofrom_TPM.tsv')
-isoTPM_GT <- isoTPM_GT[,c(1:12,23,24,names(isoTPM_GT) %>% grep("Cells_EBV_",.,value = F))]
-# Total CHRNA5 TPM 
-totalTPM <-read.csv('~/Desktop/chr15_CHRNA5_bladder_project/GTEx_CHRNA5_TPM_in_alltissue.csv')
-totalTPM <- totalTPM[,c(1,35)]
-names(totalTPM)[1] <- "GTEx_ID"
-# Merged above data
+gtex_info <- read.delim('~/Desktop/chr15_CHRNA5_bladder_project/Finalized_GTEx_GT_CHRAN5_isofrom_TPM.tsv')
+gtex_info <- isoTPM_GT[,c(1:12,23,24)]
+
+
+#Total CHRNA5 TPM in GTExv10
+GTExv10.C5.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_gene_tpm_CHRNA5_project.csv')
+GTExv10.C5.TPM <- GTExv10.C5.TPM %>% select(GTEx_ID,CHRNA5_geneTPM_cells_ebv.transformed_lymphocytes)
+
+GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project.csv')
+GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('CHRNA5_.*_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
+
+############ WORKING PROGRESS #############
 
 GTEx_meta <- left_join(isoTPM_GT,totalTPM,by='GTEx_ID')
 
@@ -124,4 +129,3 @@ df <- left_join(df,GTEx_meta,by="GTEx_ID")
 df <- df[,c(1,2,20:32,3:19,33:ncol(df))]
 
 df[, 16:37] <- lapply(df[, 16:37], function(x) as.numeric(x))
-
