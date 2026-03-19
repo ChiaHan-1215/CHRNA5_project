@@ -11,6 +11,11 @@ library(foreach)
 library(RNOmni)
 library(tibble)
 
+library(recount3)
+library(snapcount)
+library(megadepth)
+library(dplyr)
+library(tidyr)
 
 # load cov, for PC studd
 
@@ -32,17 +37,22 @@ rownames(mani_bladder_with_iso) <- mani_bladder_with_iso$Sample_ID
 mani_bladder_with_iso <- mani_bladder_with_iso[,c(-1,-12)]
 
 ########################################################################################################################
-# laod Recount3 files
+# laod Recount3 files Junction COUNT extraction
 ########################################################################################################################
 
-# GTEx
+# GTEx 
 setwd('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/Recount3_GTEx_junction_count_table/All_CHRAN5_jt/')
-
 
 
 lf <- list.files('.',pattern = '.csv')
 
+# As we load only EBV LCL, it's in the blood section 
 
+blood <- read_csv('BLOOD_GTEx_CHRNA5_jc.csv')
+names(blood)[1] <- "Sample_ID"
+# Merge to see how many sample 
+# REmove NA
+Mer <- inner_join(mani_bladder, blood, by = "Sample_ID") 
 
 
 # the target isoform in C5, check with SHSY5Y Jct count, only 1bp move so it's ok
@@ -77,12 +87,7 @@ iso_id <- c(  "R153_V416",
 
 novel <- c("PSAM4_C5","C5_intron1")
 
-# load the SMOKE and GT and TPM 
-# also have EBV cell "Cells_EBV_transformedlymphocytes"
-fin <- read.delim('~/Desktop/chr15_CHRNA5_bladder_project/Finalized_GTEx_GT_CHRAN5_isofrom_TPM.tsv')
-
 ### Form Here we can get isoform TPM 
-
 
 # Get GT only, this time we extract rs169xxxx
 fin <- fin[,c(1:88)]
@@ -264,7 +269,13 @@ df_ls <- list()
 #   }
 # }
 
+########################################################################################################################
+# laod TPM files FOR TPM AND GT EXTRACTION
+########################################################################################################################
 
+# load the SMOKE and GT and TPM 
+# also have EBV cell "Cells_EBV_transformedlymphocytes"
+fin <- read.delim('~/Desktop/chr15_CHRNA5_bladder_project/Finalized_GTEx_GT_CHRAN5_isofrom_TPM.tsv')
 
 
 
