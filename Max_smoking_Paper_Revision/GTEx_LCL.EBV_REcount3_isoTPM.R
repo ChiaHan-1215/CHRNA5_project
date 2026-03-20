@@ -109,15 +109,72 @@ for (j in names(df)[7:12]){
 # load the SMOKE and GT and TPM 
 # also have EBV cell "Cells_EBV_transformedlymphocytes"
 gtex_info <- read.delim('~/Desktop/chr15_CHRNA5_bladder_project/Finalized_GTEx_GT_CHRAN5_isofrom_TPM.tsv')
-gtex_info <- isoTPM_GT[,c(1:12,23,24)]
+gtex_info <- gtex_info[,c(1:12,23,24)]
 
 
-#Total CHRNA5 TPM in GTExv10
+#load CHRNA5 TPMs in GTExv10, correct 
 GTExv10.C5.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_gene_tpm_CHRNA5_project.csv')
 GTExv10.C5.TPM <- GTExv10.C5.TPM %>% select(GTEx_ID,CHRNA5_geneTPM_cells_ebv.transformed_lymphocytes)
 
-GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project.csv')
-GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('CHRNA5_.*_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
+
+######### FIX ##############
+######### FIX ##############
+######### FIX ##############
+# 
+# df <- read.delim('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/GTEx_analysis_v10/RNA_Seq/subset_C5.C3.GTExv10.tpm.renamed.txt')
+# df <- df %>% add_column(GTEx_ID=paste0(df$gene_id,"_",df$transcript_id,"_TPM"),.before = 1)
+# df <- df[,c(1,4:ncol(df))]
+# 
+# df_trans <- as.data.frame(t(df[, -1]))
+# colnames(df_trans) <- df$GTEx_ID
+# df_trans$Sample_ID <- rownames(df_trans)
+# rownames(df_trans) <- NULL
+# df_trans <- df_trans[, c(ncol(df_trans), 1:(ncol(df_trans)-1))]
+# df_trans$Sample_ID <- gsub('\\.','-',df_trans$Sample_ID)
+# df_trans <- df_trans %>% add_column(GTEx_ID=sub("^([^-]+-[^-]+).*$", "\\1", df_trans$Sample_ID),.after = 1)
+# 
+# 
+# # laod mainfest file 
+# mani <- read.delim('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/GTEx_analysis_v10/Phenotype_dbGaP/phs000424.v10.pht002743.v10.p2.c1.GTEx_Sample_Attributes.GRU.txt',skip = 10)
+# mani_sub <- mani %>% select(SAMPID,SMTSD)
+# mani_sub$SMTSD <- gsub("[[:space:]()/-]+", "_", mani_sub$SMTSD)
+# mani_sub$SMTSD <- gsub("_$", "", gsub("[[:space:]()/-]+", "_", mani_sub$SMTSD))
+# mani_sub$SMTSD <- tolower(mani_sub$SMTSD)
+# names(mani_sub)[1] <- "Sample_ID"
+# df_trans <- left_join(df_trans,mani_sub,by="Sample_ID")
+# 
+# 
+# library(dplyr)
+# library(tidyr)
+# 
+# df_wide <- df_trans %>%
+#   # 1. Remove Sample_ID because it's too specific for a one-row-per-GTEx_ID summary
+#   select(-Sample_ID) %>%
+#   # 2. Pivot the data wider
+#   pivot_wider(
+#     id_cols = GTEx_ID, 
+#     names_from = SMTSD, 
+#     values_from = starts_with("CHRNA"),
+#     names_glue = "{.value}_{SMTSD}"
+#   )
+# 
+
+# now save 
+
+#write.csv(df_wide,'/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project_V2.csv',row.names = F,quote = F)
+
+######### FIXed ##############
+
+
+## The table needs correct as CHRNA3/5 are assign incorrect 
+GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project_V2.csv')
+GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
+
+# Merge 
+gc.Merged <- left_join(GTExv10.C5.TPM,GTExv10.C5.iso.TPM,by="GTEx_ID")
+
+
+
 
 ############ WORKING PROGRESS #############
 
