@@ -168,21 +168,17 @@ GTExv10.C5.TPM <- GTExv10.C5.TPM %>% select(GTEx_ID,CHRNA5_geneTPM_cells_ebv.tra
 
 ## The table needs correct as CHRNA3/5 are assign incorrect 
 GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project_V2.csv')
-GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
+GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('CHRNA5_.*_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
 
 # Merge 
 gc.Merged <- left_join(GTExv10.C5.TPM,GTExv10.C5.iso.TPM,by="GTEx_ID")
 
-
-
-
-############ WORKING PROGRESS #############
-
-GTEx_meta <- left_join(isoTPM_GT,totalTPM,by='GTEx_ID')
-
+GTEx_meta <- left_join(gtex_info,gc.Merged,by='GTEx_ID')
 
 df <- left_join(df,GTEx_meta,by="GTEx_ID")
 
 df <- df[,c(1,2,20:32,3:19,33:ncol(df))]
 
 df[, 16:37] <- lapply(df[, 16:37], function(x) as.numeric(x))
+
+
