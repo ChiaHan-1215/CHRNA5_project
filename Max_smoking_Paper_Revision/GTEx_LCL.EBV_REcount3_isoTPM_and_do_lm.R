@@ -29,9 +29,9 @@ cov$GTEx_ID <- rownames(cov) %>% gsub('\\.','-',.)
 # laod mainfest file 
 mani <- read.delim('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/GTEx_analysis_v10/Phenotype_dbGaP/phs000424.v10.pht002743.v10.p2.c1.GTEx_Sample_Attributes.GRU.txt',skip = 10)
 
-mani_bladder <- mani %>% dplyr::filter(SMTSD == 'Cells - EBV-transformed lymphocytes')
-mani_bladder <- mani_bladder[,c(1,2)]
-names(mani_bladder)[2] <- "Sample_ID"
+mani_blood <- mani %>% dplyr::filter(SMTSD == 'Cells - EBV-transformed lymphocytes')
+mani_blood <- mani_blood[,c(1,2)]
+names(mani_blood)[2] <- "Sample_ID"
 
 ########################################################################################################################
 # laod Recount3 files Junction COUNT extraction
@@ -49,7 +49,7 @@ blood <- read_csv('BLOOD_GTEx_CHRNA5_jc.csv')
 names(blood)[1] <- "Sample_ID"
 # Merge to see how many sample 
 # REmove NA
-Mer <- inner_join(mani_bladder, blood, by = "Sample_ID") 
+Mer <- inner_join(mani_blood, blood, by = "Sample_ID") 
 Mer <- Mer[,-1]
 
 # the target isoform in C5, check with SHSY5Y Jct count, only 1bp move so it's ok
@@ -207,9 +207,10 @@ for (i in grep("_add",names(inputdf),value = T)){
     REF <- "G"
     ALT <- "A"
     
-    for(j in names(inputdf) %>% grep("Perc",.,value = T)){
+    
+    for(j in names(inputdf) %>% grep("Perc|CHRNA5",.,value = T)){
       
-      # j <- "Perc_R153"
+      # j <- "CHRNA5_geneTPM_cells_ebv.transformed_lymphocytes"
       fmla <- as.formula(paste0(j, "~" , i))
       fmla_adj <- as.formula(paste0(j, "~" , i, " + SEX + AGE + RACE + Smoke_CURRENT_FORMER_NEVER"))
       fmla_int <- as.formula(paste(j, "~", i, " * Smoke_CURRENT_FORMER_NEVER  + SEX + AGE + RACE"))
@@ -228,7 +229,7 @@ for (i in grep("_add",names(inputdf),value = T)){
       # Iterate through the list of formulas
       
       for (current_formula in formula_list) {
-        # current_formula <- formula_list[[3]]
+        # current_formula <- formula_list[[1]]
         # Extract variable names from the formula
         vars <- get_vars_from_formula(current_formula)
         
