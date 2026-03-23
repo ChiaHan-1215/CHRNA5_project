@@ -212,6 +212,7 @@ for (i in grep("_add",names(inputdf),value = T)){
       # j <- "Perc_R153"
       fmla <- as.formula(paste0(j, "~" , i))
       fmla_adj <- as.formula(paste0(j, "~" , i, " + SEX + AGE + RACE + Smoke_CURRENT_FORMER_NEVER"))
+      fmla_int <- as.formula(paste(j, "~", i, " * Smoke_CURRENT_FORMER_NEVER  + SEX + AGE + RACE"))
 
       
       # Function to extract variable names from a formula
@@ -222,12 +223,12 @@ for (i in grep("_add",names(inputdf),value = T)){
       
       # List of formulas
       
-      formula_list <- list(fmla,fmla_adj)
+      formula_list <- list(fmla,fmla_adj,fmla_int)
       
       # Iterate through the list of formulas
       
       for (current_formula in formula_list) {
-        # current_formula <- formula_list[[2]]
+        # current_formula <- formula_list[[3]]
         # Extract variable names from the formula
         vars <- get_vars_from_formula(current_formula)
         
@@ -250,13 +251,12 @@ for (i in grep("_add",names(inputdf),value = T)){
           print(paste0('error of tissue ',k))
           return(NA)})
         
-        # sex_int <- tryCatch(
-        #   grep(":", rownames(coef(summary(out))), value = TRUE),
-        #   error = function(e) {
-        #     print(paste0('Error for tissue ', k))
-        #     return(character(0))
-        #   })
-        
+        sk_int <- tryCatch(
+          grep(":", rownames(coef(summary(out))), value = TRUE),
+          error = function(e) {
+            print(paste0('Error for tissue ', k))
+            return(character(0))
+          })
         
         
         # now set up the summary table
@@ -266,7 +266,6 @@ for (i in grep("_add",names(inputdf),value = T)){
           #Strand_Status = Strand_Status,
           variable = j,
           model = paste0(formula(current_formula)[2],"~",formula(current_formula)[3]),
-          dataset = ddset,
           N_sample_not_NA = sum(!is.na(tar[[j]])),
           
           geno_0 = tmp.snp.0b,
@@ -294,7 +293,17 @@ for (i in grep("_add",names(inputdf),value = T)){
           
           p_val = tryCatch(round(coef(summary(out))[2,4],3), error=function(e){
             print(paste0('error of tissue'))
-            return(NA)})
+            return(NA)}),
+          
+          p_val_interaction = tryCatch(
+            ifelse(
+              length(coef(summary(out))[sk_int, 4]) == 0, 
+              NA, 
+              round(coef(summary(out))[sk_int, 4], 3)
+            ), 
+            error = function(e) {
+              print(paste0('Error for tissue'))
+              return(NA)})
           
         )
         
