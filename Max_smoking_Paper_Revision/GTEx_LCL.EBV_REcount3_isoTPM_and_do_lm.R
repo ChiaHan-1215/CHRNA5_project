@@ -62,7 +62,7 @@ Mer <- Mer[,-1]
 #chr15:78590637-78593091  E415  Full-length
 
 ## Other Exons, so is +1,-1
- 
+
 # chr15:78565826-78580810 Ex1-2
 # chr15:78580963-78586644 Ex2-3
 # chr15:78586690-78588313 Ex3-4
@@ -167,7 +167,7 @@ GTExv10.C5.TPM <- GTExv10.C5.TPM %>% select(GTEx_ID,CHRNA5_geneTPM_cells_ebv.tra
 
 
 ## The table needs correct as CHRNA3/5 are assign incorrect 
-GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project_V2.csv')
+GTExv10.C5.iso.TPM <- read.csv('/Volumes/ifs/DCEG/Branches/LTG/Prokunina/GTEx_data/project_CHRNA5/masterFile_GTEx_v10_isoform_tpm_CHRNA5_project.csv')
 GTExv10.C5.iso.TPM <- GTExv10.C5.iso.TPM %>% select(GTEx_ID,grep('CHRNA5_.*_cells_ebv.transformed_lymphocytes',names(GTExv10.C5.iso.TPM),value = T))
 
 # Merge 
@@ -180,5 +180,132 @@ df <- left_join(df,GTEx_meta,by="GTEx_ID")
 df <- df[,c(1,2,20:32,3:19,33:ncol(df))]
 
 df[, 16:37] <- lapply(df[, 16:37], function(x) as.numeric(x))
+
+
+### Do lm()
+
+# First chkec df factor or not
+
+df$SEX <- factor(df$SEX)
+df$RACE <- factor(df$RACE)
+df$Smoke_CURRENT_FORMER_NEVER <- factor(df$Smoke_CURRENT_FORMER_NEVER)
+str(df)
+
+df.out <- data.frame()
+df_count.summary <- data.frame()
+
+
+inputdf <- df
+
+for (i in grep("_add",names(inputdf),value = T)){
+    # i <- "rs16969968_add"
+    # 
+    snp_id <- gsub("_add|_dom", "", i)   # "rs62286992"
+    
+    #Strand_Status <- m$Strand_Status
+    
+    REF <- "G"
+    ALT <- "A"
+    
+    for(j in names(inputdf) %>% grep("Perc",.,value = T)){
+      
+      # j <- "Perc_R153"
+      fmla <- as.formula(paste0(j, "~" , i))
+      fmla_adj <- as.formula(paste0(j, "~" , i, " + SEX + AGE + RACE + Smoke_CURRENT_FORMER_NEVER"))
+
+      
+      # Function to extract variable names from a formula
+      
+      get_vars_from_formula <- function(formula) {
+        all.vars(formula)
+      }
+      
+      # List of formulas
+      
+      formula_list <- list(fmla,fmla_adj)
+      
+      # Iterate through the list of formulas
+      
+      for (current_formula in formula_list) {
+        # current_formula <- formula_list[[2]]
+        # Extract variable names from the formula
+        vars <- get_vars_from_formula(current_formula)
+        
+        # Filter the tar data frame based on the variables in the formula and filter out NA or empty data to get the N_sample
+        
+        #tar <- inputdf %>% filter(inputdf[[i]] %in% c(0, 1, 2))
+        tar <- inputdf %>%
+          filter_at(vars, all_vars(!is.na(.) & . != ""))
+        
+        
+        tmp.snp <- tar
+        tmp.snp.0a <- tmp.snp[ which(tmp.snp[,i] == 0), ]
+        tmp.snp.0b <- as.character(unique(tmp.snp.0a[gsub("_add", "", i)]))
+        tmp.snp.1a <- tmp.snp[ which(tmp.snp[,i] == 1), ]
+        tmp.snp.1b <- as.character(unique(tmp.snp.1a[gsub("_add", "", i)]))
+        tmp.snp.2a <- tmp.snp[ which(tmp.snp[,i] == 2), ]
+        tmp.snp.2b <- as.character(unique(tmp.snp.2a[gsub("_add", "", i)]))
+        
+        out <- tryCatch(lm(current_formula,tar), error=function(e){
+          print(paste0('error of tissue ',k))
+          return(NA)})
+        
+        # sex_int <- tryCatch(
+        #   grep(":", rownames(coef(summary(out))), value = TRUE),
+        #   error = function(e) {
+        #     print(paste0('Error for tissue ', k))
+        #     return(character(0))
+        #   })
+        
+        
+        
+        # now set up the summary table
+        
+        tmp.df <- data.frame(
+          snp = snp_id,
+          #Strand_Status = Strand_Status,
+          variable = j,
+          model = paste0(formula(current_formula)[2],"~",formula(current_formula)[3]),
+          dataset = ddset,
+          N_sample_not_NA = sum(!is.na(tar[[j]])),
+          
+          geno_0 = tmp.snp.0b,
+          geno_1 = tmp.snp.1b,
+          geno_2 = tmp.snp.2b,
+          n_0 = nrow(tmp.snp.0a),
+          n_1 = nrow(tmp.snp.1a),
+          n_2 = nrow(tmp.snp.2a),
+          
+          ## add TPM ###
+          
+          exp_mean = round(mean(tar[[j]]),3),
+          exp_geno_0 = round(mean(tmp.snp.0a[[j]]),3),
+          exp_geno_1 = round(mean(tmp.snp.1a[[j]]),3),
+          exp_geno_2 = round(mean(tmp.snp.2a[[j]]),3),
+          
+          REF = REF,
+          ALT = ALT,
+          
+          
+          
+          beta = tryCatch(round(coef(summary(out))[2,1],3), error=function(e){
+            print(paste0('error of tissue'))
+            return(NA)}),
+          
+          p_val = tryCatch(round(coef(summary(out))[2,4],3), error=function(e){
+            print(paste0('error of tissue'))
+            return(NA)})
+          
+        )
+        
+        
+        
+        # bind rows of temporary data frame to the results data frame
+        
+        df.out <- rbind(df.out, tmp.df)
+        
+        
+      }
+    }}
 
 
