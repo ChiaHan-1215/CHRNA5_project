@@ -182,7 +182,85 @@ df <- df[,c(1,2,20:32,3:19,33:ncol(df))]
 df[, 16:37] <- lapply(df[, 16:37], function(x) as.numeric(x))
 
 
+############## ############## ############## ############## ############## ##############
+############## For revision compare
+############## ############## ############## ############## ############## ##############
+
+table(df[ which(df$iso_sum >20), ]$rs16969968)
+
+df.test <- df[ which(df$iso_sum > 20), ]
+
+df_mean <- df.test %>%
+  # Remove rows where the genotype is missing
+  filter(!is.na(rs16969968)) %>%
+  # Group by the genotype
+  group_by(rs16969968) %>%
+  # Calculate means for the specific range of data columns
+  summarise(
+    # Add a count column to see how many samples are in each group
+    n = n(),
+    # Use column names to define the range (from Ex1-2 to the last TPM)
+    across(
+      `Ex1-2`:`CHRNA5_ENST00000559576.1_TPM_cells_ebv_transformed_lymphocytes`, 
+      ~ round(mean(.x, na.rm = TRUE), 3)
+    ),
+    .groups = "drop"
+  )
+
+# View the result
+print(df_mean)
+
+# Do T.TEST AA vs GG
+# Excel: =TTEST(J18:J20,J21:J23,2,2)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_R153,T2[ which(T2$rs16969968 == "G G"), ]$Perc_R153,var.equal = F)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_Q197,T2[ which(T2$rs16969968 == "G G"), ]$Perc_Q197,var.equal = F)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_W236,T2[ which(T2$rs16969968 == "G G"), ]$Perc_W236,var.equal = F)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_P238,T2[ which(T2$rs16969968 == "G G"), ]$Perc_P238,var.equal = F)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_R372,T2[ which(T2$rs16969968 == "G G"), ]$Perc_R372,var.equal = F)
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_E415,T2[ which(T2$rs16969968 == "G G"), ]$Perc_E415,var.equal = F)
+
+
+###"Ex1-2"   "Ex2-3"   "Ex3-4"   "Ex4-5"  
+
+t.test(T2[ which(T2$rs16969968 == "A A"), ]$Ex1-2,T2[ which(T2$rs16969968 == "G G"), ]$Ex1-2,var.equal = F)
+
+
+# 
+# # WIL TEST
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_R153,T2[ which(T2$rs16969968 == "G G"), ]$Perc_R153)
+# 
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_Q197,T2[ which(T2$rs16969968 == "G G"), ]$Perc_Q197)
+# 
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_W236,T2[ which(T2$rs16969968 == "G G"), ]$Perc_W236)
+# 
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_P238,T2[ which(T2$rs16969968 == "G G"), ]$Perc_P238)
+# 
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_R372,T2[ which(T2$rs16969968 == "G G"), ]$Perc_R372)
+# 
+# wilcox.test(T2[ which(T2$rs16969968 == "A A"), ]$Perc_E415,T2[ which(T2$rs16969968 == "G G"), ]$Perc_E415)
+
+
+
+SUMM <- T2 %>%
+  pivot_longer(
+    cols = starts_with("Ex"),
+    names_to = "measurement",
+    values_to = "value"
+  ) %>%group_by(measurement) %>%summarise(p.value = tidy(t.test(value ~ rs16969968, var.equal = F))$p.value)
+  
+
+############## ############## ############## ############## ############## ##############
+############## ############## ############## ############## ############## ##############
 ### Do lm()
+############## ############## ############## ############## ############## ##############
+############## ############## ############## ############## ############## ##############
+
 
 # First chkec df factor or not
 
@@ -213,7 +291,7 @@ for (i in grep("_add",names(inputdf),value = T)){
       # j <- "CHRNA5_geneTPM_cells_ebv.transformed_lymphocytes"
       fmla <- as.formula(paste0(j, "~" , i))
       fmla_adj <- as.formula(paste0(j, "~" , i, " + SEX + AGE + RACE + Smoke_CURRENT_FORMER_NEVER"))
-      fmla_int <- as.formula(paste(j, "~", i, " * Smoke_CURRENT_FORMER_NEVER  + SEX + AGE + RACE"))
+      #fmla_int <- as.formula(paste(j, "~", i, " * Smoke_CURRENT_FORMER_NEVER  + SEX + AGE + RACE"))
 
       
       # Function to extract variable names from a formula
@@ -294,17 +372,17 @@ for (i in grep("_add",names(inputdf),value = T)){
           
           p_val = tryCatch(round(coef(summary(out))[2,4],3), error=function(e){
             print(paste0('error of tissue'))
-            return(NA)}),
-          
-          p_val_interaction = tryCatch(
-            ifelse(
-              length(coef(summary(out))[sk_int, 4]) == 0, 
-              NA, 
-              round(coef(summary(out))[sk_int, 4], 3)
-            ), 
-            error = function(e) {
-              print(paste0('Error for tissue'))
-              return(NA)})
+            return(NA)})
+          #,
+          # p_val_interaction = tryCatch(
+          #   ifelse(
+          #     length(coef(summary(out))[sk_int, 4]) == 0, 
+          #     NA, 
+          #     round(coef(summary(out))[sk_int, 4], 3)
+          #   ), 
+          #   error = function(e) {
+          #     print(paste0('Error for tissue'))
+          #     return(NA)})
           
         )
         
@@ -317,5 +395,7 @@ for (i in grep("_add",names(inputdf),value = T)){
         
       }
     }}
+
+
 
 
