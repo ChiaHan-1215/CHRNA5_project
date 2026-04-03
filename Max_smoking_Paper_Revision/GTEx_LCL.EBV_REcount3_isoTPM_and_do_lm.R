@@ -187,7 +187,35 @@ df[, 16:37] <- lapply(df[, 16:37], function(x) as.numeric(x))
 ############## ############## ############## ############## ############## ##############
 
 table(df[ which(df$iso_sum >20), ]$rs16969968)
+total_n <- df %>%
+  filter(!is.na(rs16969968)) %>%
+  nrow()
 
+Over30 <- df %>%
+  filter(iso_sum > 30, !is.na(rs16969968)) %>%
+  group_by(rs16969968) %>%
+  summarise(Sample = n()) %>%
+  mutate(Percent = round((Sample / total_n * 100),2))
+
+Over20 <- df %>%
+  filter(iso_sum > 20, !is.na(rs16969968)) %>%
+  group_by(rs16969968) %>%
+  summarise(Sample = n()) %>%
+  mutate(Percent = round((Sample / total_n * 100),2))
+
+rev_table <- data.frame(
+  rs16969968_GT = c("AA","AG","GG"),
+  sample_over30= paste0("N=",Over30$Sample,", Perc=",Over30$Percent),
+  sample_over20= paste0("N=",Over20$Sample,", Perc=",Over20$Percent)
+  )
+
+
+
+
+
+
+
+                      
 df.test <- df[ which(df$iso_sum > 20), ]
 
 df_mean <- df.test %>%
